@@ -19,7 +19,7 @@ metadata:
   name: hdfs-datanode
 spec:
   serviceName: "hdfs-datanode"
-  replicas: 3
+  replicas: 6
   template:
     metadata:
       labels:
@@ -45,4 +45,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 10Gi
+          storage: 400Gi
