@@ -28,10 +28,19 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: hdfs-namenode
-          image: gcr.io/ivynet-containers/hadoop-nn:2.8.1
+          image: gcr.io/ivynet-containers/hadoop-nn:2.8.5
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 10Gi
+              cpu: 1500m
+            limits:
+              memory: 10Gi
           env:
             - name: CLUSTER_NAME
               value: hdfs-k8s
+            - name: HADOOP_HEAPSIZE
+              value: "8192"
           ports:
           - containerPort: 8020
             name: fs
@@ -39,6 +48,8 @@ spec:
           - name: namedir
             mountPath: /hadoop/dfs/name
       restartPolicy: Always
+      nodeSelector:
+          beta.kubernetes.io/instance-type: n1-highmem-2
   volumeClaimTemplates:
   - metadata:
       name: namedir

@@ -27,7 +27,14 @@ spec:
     spec:
       containers:
         - name: datanode
-          image: gcr.io/ivynet-containers/hadoop-dn:2.8.1
+          image: gcr.io/ivynet-containers/hadoop-dn:2.8.5
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 4Gi
+              cpu: 250m
+            limits:
+              memory: 4Gi
           env:
             - name: CORE_CONF_fs_defaultFS
               value: hdfs://hdfs-namenode-0.hdfs-namenode.default.svc.cluster.local:8020
@@ -37,10 +44,30 @@ spec:
           volumeMounts:
           - name: datadir
             mountPath: /hadoop/dfs/data
+          - name: datadir01
+            mountPath: /hadoop/dfs/data01
+          - name: datadir02
+            mountPath: /hadoop/dfs/data02
       restartPolicy: Always
+      nodeSelector:
+        beta.kubernetes.io/instance-type: n1-highmem-2
   volumeClaimTemplates:
   - metadata:
       name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 400Gi
+  - metadata:
+      name: datadir01
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 400Gi
+  - metadata:
+      name: datadir02
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
